@@ -1,0 +1,25 @@
+<launch>
+    <arg name="type" default="angular"/>
+    <arg name="target" default="z"/>
+
+    <arg name="P_param" default="0.5"/>
+    <arg name="I_param" default="0.0"/>
+    <arg name="D_param" default="0.0"/>
+
+    <arg name="x_offset" default="0.0"/>
+    <arg name="y_offset" default="0.0"/>
+    <arg name="z_offset" default="1.5"/>
+
+    <node name="angular_z" pkg="drone_controller" type="controller">
+        <param name="control_type" type="string" value="$(arg type)" />
+        <param name="control_target" type="string" value="$(arg target)" />
+        <param name="P_param"  value="$(arg P_param)" />
+        <param name="I_param"  value="$(arg I_param)" />
+        <param name="D_param"  value="$(arg D_param)" />
+        <param name="x_offset" value="$(arg x_offset)" />
+        <param name="y_offset" value="$(arg y_offset)" />
+        <param name="z_offset" value="$(arg z_offset)" />
+        
+    </node>
+  
+</launch>

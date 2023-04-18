@@ -1,0 +1,38 @@
+<launch>
+
+
+    <include file="$(find drone_controller)/launch/control_linear_x.launch">
+        <arg name="P_param" default="3"/>
+        <arg name="I_param" default="0.0"/>
+        <arg name="D_param" default="0.0"/>
+    </include>
+
+    <include file="$(find drone_controller)/launch/control_linear_y.launch">
+        <arg name="P_param" default="3"/>
+        <arg name="I_param" default="0.0"/>
+        <arg name="D_param" default="0.0"/>
+    </include>
+
+    <include file="$(find drone_controller)/launch/control_linear_z.launch">
+        <arg name="P_param" default="0.9"/>
+        <arg name="I_param" default="0.0"/>
+        <arg name="D_param" default="0.0"/>
+    </include>
+
+    <include file="$(find drone_controller)/launch/control_angular_z.launch">
+        <arg name="P_param" default="3"/>
+        <arg name="I_param" default="0.0"/>
+        <arg name="D_param" default="0.0"/>
+    </include>
+
+    <node name="fusion_control" pkg="drone_controller" type="fusion_controller">
+        <remap from="drone_twist" to="mavros/setpoint_velocity/cmd_vel_unstamped"/>
+        <remap from="linear_x_output"  to="linear_x/output"/>
+        <remap from="linear_y_output"  to="linear_y/output"/>
+        <remap from="linear_z_output"  to="linear_z/output"/>
+        <remap from="angular_x_output" to="angular/output"/>
+        <remap from="angular_y_output" to="angular/output"/>
+        <remap from="angular_z_output" to="angular_z/output"/>
+    </node>
+  
+</launch>
