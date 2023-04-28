@@ -30,8 +30,10 @@ class Control{
         ros::Subscriber sub_anglular_y;
 
         float m_twist[6] = {0, 0, 0, 0, 0, 0};
+        int m_rate = 20;
 
     public:
+        bt::Condition condition;
         Control();
         void linearXCallback(const std_msgs::Float32::ConstPtr& msg);
         void linearYCallback(const std_msgs::Float32::ConstPtr& msg);
@@ -39,10 +41,11 @@ class Control{
         void angularXCallback(const std_msgs::Float32::ConstPtr& msg);
         void angularYCallback(const std_msgs::Float32::ConstPtr& msg);
         void angularZCallback(const std_msgs::Float32::ConstPtr& msg);
+        void getParam();
         void pubTwist();
 };
 
-Control :: Control(){
+Control :: Control() : condition("controller_running"){
     pub_twist = n.advertise<geometry_msgs::Twist>("drone_twist", 10);
 
     sub_linear_x = n.subscribe<std_msgs::Float32>("linear_x_output", 1,  &Control::linearXCallback, this);
@@ -62,9 +65,15 @@ void Control :: angularXCallback(const std_msgs::Float32::ConstPtr& msg){ m_twis
 void Control :: angularYCallback(const std_msgs::Float32::ConstPtr& msg){ m_twist[4] = msg->data; return; }
 void Control :: angularZCallback(const std_msgs::Float32::ConstPtr& msg){ m_twist[5] = msg->data; return; }
 
+void Control :: getParam(){
+    string node_ns = ros::this_node::getName();
+    n.getParam("/" + node_ns + "/rate", m_rate);
+    return;
+}
+
 void Control :: pubTwist(){
 
-    ros::Rate rate(30);
+    ros::Rate rate(m_rate);
 
     geometry_msgs::Twist pub_msg_twist;
     
@@ -75,7 +84,14 @@ void Control :: pubTwist(){
     pub_msg_twist.angular.y = m_twist[4]; 
     pub_msg_twist.angular.z = m_twist[5]; 
     pub_twist.publish(pub_msg_twist);
-
+    // if(m_twist[0] != 0 || m_twist[1] != 0 || m_twist[2] != 0 || m_twist[3] != 0 || m_twist[4] != 0 || m_twist[5] != 0){
+    //     condition.set(true);
+    //     condition.publish();
+    // }else{
+    //     condition.set(false);
+    //     condition.publish();
+    // }
+    
     rate.sleep();
     return;
 }
