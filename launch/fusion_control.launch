@@ -1,31 +1,42 @@
 <launch>
 
+    <arg name="rate" default="15"/>
+
 
     <include file="$(find drone_controller)/launch/control_linear_x.launch">
-        <arg name="P_param" default="3"/>
+        <arg name="rate" default="$(arg rate)"/>
+        <arg name="P_param" default="2.5"/>
         <arg name="I_param" default="0.0"/>
-        <arg name="D_param" default="0.0"/>
+        <arg name="D_param" default="0.7"/>
+        <arg name="margin" default="0.1"/>
     </include>
 
     <include file="$(find drone_controller)/launch/control_linear_y.launch">
-        <arg name="P_param" default="3"/>
+        <arg name="rate" default="$(arg rate)"/>
+        <arg name="P_param" default="2.5"/>
         <arg name="I_param" default="0.0"/>
-        <arg name="D_param" default="0.0"/>
+        <arg name="D_param" default="0.7"/>
+        <arg name="margin" default="0.01"/>
+        <!-- <remap from="move_base_simple/goal" to="tag/goal"/> -->
     </include>
 
     <include file="$(find drone_controller)/launch/control_linear_z.launch">
-        <arg name="P_param" default="0.9"/>
-        <arg name="I_param" default="0.0"/>
-        <arg name="D_param" default="0.0"/>
+        <arg name="rate" default="$(arg rate)"/>
+        <arg name="P_param" default="3"/>
+        <arg name="I_param" default="0.1"/>
+        <arg name="D_param" default="0.7"/>
+        <arg name="margin" default="0.01"/>
+        <!-- <remap from="move_base_simple/goal" to="tag/goal"/> -->
     </include>
 
-    <include file="$(find drone_controller)/launch/control_angular_z.launch">
+    <!-- <include file="$(find drone_controller)/launch/control_angular_z.launch">
         <arg name="P_param" default="3"/>
         <arg name="I_param" default="0.0"/>
         <arg name="D_param" default="0.0"/>
-    </include>
+    </include> -->
 
     <node name="fusion_control" pkg="drone_controller" type="fusion_controller">
+        <arg name="rate" default="$(arg rate)"/>
         <remap from="drone_twist" to="mavros/setpoint_velocity/cmd_vel_unstamped"/>
         <remap from="linear_x_output"  to="linear_x/output"/>
         <remap from="linear_y_output"  to="linear_y/output"/>
