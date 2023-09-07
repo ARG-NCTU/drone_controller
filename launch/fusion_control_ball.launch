@@ -1,0 +1,41 @@
+<launch>
+
+    <arg name="rate" default="15"/>
+
+
+    <include file="$(find drone_controller)/launch/control_linear_x.launch">
+        <param name="rate" default="$(arg rate)"/>
+        <param name="P_param" default="0.0"/>
+        <param name="I_param" default="0.0"/>
+        <param name="D_param" default="0.0"/>
+        <param name="margin" default="0.01"/>
+    </include>
+
+    <include file="$(find drone_controller)/launch/control_linear_y.launch">
+        <arg name="rate" default="$(arg rate)"/>
+        <arg name="P_param" default="0.5"/>
+        <arg name="I_param" default="0.0"/>
+        <arg name="D_param" default="0.0"/>
+        <arg name="margin" default="0.01"/>
+    </include>
+
+    <include file="$(find drone_controller)/launch/control_linear_z.launch">
+        <arg name="rate" default="$(arg rate)"/>
+        <arg name="P_param" default="9.7"/>
+        <arg name="I_param" default="0.0"/>
+        <arg name="D_param" default="0.0"/>
+        <arg name="margin" default="0.01"/>
+    </include>
+
+    <node name="fusion_control" pkg="drone_controller" type="fusion_controller">
+        <param name="rate" type="int" value='$(arg rate)'/>
+        <remap from="drone_twist" to="mavros/setpoint_velocity/cmd_vel_unstamped"/>
+        <remap from="linear_x_output"  to="linear_x/output"/>
+        <remap from="linear_y_output"  to="linear_y/output"/>
+        <remap from="linear_z_output"  to="linear_z/output"/>
+        <remap from="angular_x_output" to="angular/output"/>
+        <remap from="angular_y_output" to="angular/output"/>
+        <remap from="angular_z_output" to="angular_z/output"/>
+    </node>
+  
+</launch>
