@@ -12,8 +12,7 @@
     <arg name="y_offset" default="0.0"/>
     <arg name="z_offset" default="0.0"/>
 
-    <!-- <node name="linear_y" pkg="drone_controller" type="controller" clear_params="true" output="screen"> -->
-    <node name="linear_y" pkg="drone_controller" type="controller">
+    <node name="linear_y" pkg="drone_controller" type="controller" clear_params="true" output="screen">
         <!-- <remap from="move_base_simple/goal" to="tag/goal"/> -->
         <param name="rate" value="$(arg rate)" />
         <param name="control_type" type="string" value="$(arg type)" />
