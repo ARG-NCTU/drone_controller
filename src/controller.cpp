@@ -94,6 +94,12 @@ void Control :: getParam(){
     // n.getParam("/" + node_ns + "/roll_offset", m_D_param);
     // n.getParam("/" + node_ns + "/pitch_offset", m_D_param);
     // n.getParam("/" + node_ns + "/yaw_offset", m_D_param);
+
+    cout << "Node name: " << node_ns << endl;
+    cout << "rate: " << m_rate << endl;
+    cout << "P: " << m_P_param << endl;
+    cout << "I: " << m_I_param << endl;
+    cout << "D: " << m_D_param << endl;
     return;
 }
 
@@ -231,16 +237,16 @@ void Control :: errorEval(){
         ROS_INFO("ERROR CONTROL TARGET");
     }
     // set condition
-    cout << ros::this_node::getName() << " error: " << fixed << setprecision(2) << abs(m_error) * 1000 << " mm" << endl;
-    cout << "margin:          " << m_control_margin * 1000 << endl;
+    // cout << ros::this_node::getName() << " error: " << fixed << setprecision(2) << abs(m_error) * 1000 << " mm" << endl;
+    // cout << "margin:          " << m_control_margin * 1000 << endl;
     if(abs(m_error) >= m_control_margin){ 
         conditionSet(false); 
-        cout << "out" << endl;
+        // cout << "out" << endl;
     }
     else{ 
         conditionSet(true); 
         m_error_integral = 0;
-        cout << "in" << endl;
+        // cout << "in" << endl;
     }
     return;
 }
