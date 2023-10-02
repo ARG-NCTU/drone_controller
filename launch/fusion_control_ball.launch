@@ -4,11 +4,11 @@
 
 
     <include file="$(find drone_controller)/launch/control_linear_x.launch">
-        <param name="rate" default="$(arg rate)"/>
-        <param name="P_param" default="0.0"/>
-        <param name="I_param" default="0.0"/>
-        <param name="D_param" default="0.0"/>
-        <param name="margin" default="0.01"/>
+        <arg name="rate" default="$(arg rate)"/>
+        <arg name="P_param" default="0.0"/>
+        <arg name="I_param" default="0.0"/>
+        <arg name="D_param" default="0.0"/>
+        <arg name="margin" default="0.01"/>
     </include>
 
     <include file="$(find drone_controller)/launch/control_linear_y.launch">
