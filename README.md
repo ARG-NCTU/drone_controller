@@ -11,4 +11,5 @@ roslaunch drone_controller fusion_control.launch
   * <P_param>: Define the value of P control.
   * <I_param>: Define the value of I control.
   * <D_param>: Define the value of D control.
-  * <margin>:  Define the margin where controller should be terminated.
+  * < margin >: Define the margin where controller should be terminated.
+
