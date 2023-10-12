@@ -54,6 +54,7 @@ class Control{
     public:
         bt::Condition condition;
         bt::Action action;
+        ros::Rate rate;
         Control();
         void getParam();
         // void desiredPositionCallback(const geometry_msgs::PoseStamped::ConstPtr& msg);
@@ -69,7 +70,8 @@ class Control{
 };
 
 Control :: Control() : condition(appendString(ros::this_node::getName(), (string)"_in_margin")), 
-                        action(appendString(ros::this_node::getName(), (string)"_control")){
+                        action(appendString(ros::this_node::getName(), (string)"_control")),
+                        rate(m_rate){
     pub_control_output = n.advertise<std_msgs::Float32>(appendString(ros::this_node::getName(), (string)"/output"), 1);
     sub_error = n.subscribe<geometry_msgs::Twist>("target/error", 1,  &Control::errorCallback, this);
     // sub_desired_pose = n.subscribe<geometry_msgs::PoseStamped>("move_base_simple/goal", 1,  &Control::desiredPositionCallback, this);
@@ -100,6 +102,7 @@ void Control :: getParam(){
     cout << "P: " << m_P_param << endl;
     cout << "I: " << m_I_param << endl;
     cout << "D: " << m_D_param << endl;
+    rate = ros::Rate(m_rate);
     return;
 }
 
@@ -252,14 +255,14 @@ void Control :: errorEval(){
 }
 
 void Control :: controller(){
-    ros::Rate rate(m_rate);
+    
 
     m_output = m_error * m_P_param + m_error_integral * m_I_param + m_error_derivative * m_D_param;
     m_error_integral += m_error;
     m_error_derivative = m_error - m_error_derivative;
     pubOutput(m_output);
 
-    rate.sleep();
+    // rate.sleep();
     return;
 }
 
@@ -284,6 +287,7 @@ int main(int argc, char **argv){
             pid.controller();
         }
         ros::spinOnce();
+        pid.rate.sleep();
     }
     return 0;
 }
