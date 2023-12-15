@@ -1,0 +1,64 @@
+<launch>
+
+    <arg name="rate" default="15" />
+    <arg name="ns" default="drone" />
+
+    
+    <group ns="$(arg ns)/controller">
+        <include file="$(find drone_controller)/launch/controller.launch">
+            <arg name="type" default="linear" />
+            <arg name="target" default="x" />
+            <arg name="rate" default="$(arg rate)" />
+            <arg name="P_param" default="1.0" />
+            <arg name="I_param" default="0.0" />
+            <arg name="D_param" default="0.0" />
+            <arg name="margin" default="0.001" />
+        </include>
+
+        <include file="$(find drone_controller)/launch/controller.launch">
+            <arg name="type" default="linear" />
+            <arg name="target" default="y" />
+            <arg name="rate" default="$(arg rate)" />
+            <arg name="P_param" default="1.0" />
+            <arg name="I_param" default="0.0" />
+            <arg name="D_param" default="0.0" />
+            <arg name="margin" default="0.001" />
+        </include>
+
+        <include file="$(find drone_controller)/launch/controller.launch">
+            <arg name="type" default="linear" />
+            <arg name="target" default="z" />
+            <arg name="rate" default="$(arg rate)" />
+            <arg name="P_param" default="0.1" />
+            <arg name="I_param" default="0.0" />
+            <arg name="D_param" default="0.0" />
+            <arg name="margin" default="0.001" />
+        </include>
+
+        <include file="$(find drone_controller)/launch/controller.launch">
+            <arg name="type" default="angular" />
+            <arg name="target" default="z" />
+            <arg name="rate" default="$(arg rate)" />
+            <arg name="P_param" default="0.08" />
+            <arg name="I_param" default="0.0" />
+            <arg name="D_param" default="0.0" />
+            <arg name="margin" default="0.001" />
+        </include>
+
+        <node name="fusion_control" pkg="drone_controller" type="fusion_controller">
+            <param name="rate" type="int" value='$(arg rate)' />
+            <remap from="drone_twist" to="/mavros/setpoint_velocity/cmd_vel_unstamped" />
+            <remap from="linear_x_output" to="linear_x/output" />
+            <remap from="linear_y_output" to="linear_y/output" />
+            <remap from="linear_z_output" to="linear_z/output" />
+            <remap from="angular_x_output" to="angular/output" />
+            <remap from="angular_y_output" to="angular/output" />
+            <remap from="angular_z_output" to="angular_z/output" />
+        </node>
+
+        <node name="combine_pose_cam_error" pkg="drone_controller" type="combine_pose_cam_error.py">
+            <param name="rate" value="$(arg rate)" />
+        </node>
+    </group>
+</launch>
+    
