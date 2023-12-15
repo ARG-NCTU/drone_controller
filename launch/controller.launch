@@ -1,0 +1,31 @@
+<launch>
+    <arg name="type" default="linear"/>
+    <arg name="target" default="x"/>
+
+    <arg name="rate" default="30"/>
+    <arg name="margin" default="0.05"/>
+    <arg name="P_param" default="0.5"/>
+    <arg name="I_param" default="0.0"/>
+    <arg name="D_param" default="0.0"/>
+
+    <arg name="x_offset" default="0.0"/>
+    <arg name="y_offset" default="0.0"/>
+    <arg name="z_offset" default="0.0"/>
+
+    <node name="$(arg type)_$(arg target)" pkg="drone_controller" type="controller" clear_params="true" output="screen">
+        <param name="rate" value="$(arg rate)" />
+        <param name="control_type" type="string" value="$(arg type)" />
+        <param name="control_target" type="string" value="$(arg target)" />
+        <param name="control_margin" value="$(arg margin)" />
+        <param name="P_param"  value="$(arg P_param)" />
+        <param name="I_param"  value="$(arg I_param)" />
+        <param name="D_param"  value="$(arg D_param)" />
+        <param name="x_offset" value="$(arg x_offset)" />
+        <param name="y_offset" value="$(arg y_offset)" />
+        <param name="z_offset" value="$(arg z_offset)" />
+        <remap from="$(arg type)_$(arg target)_control_active" to="/$(arg type)_$(arg target)_control_active" />
+        <remap from="$(arg type)_$(arg target)_control_status" to="/$(arg type)_$(arg target)_control_status" />
+        <remap from="$(arg type)_$(arg target)_in_margin_success" to="/$(arg type)_$(arg target)_in_margin_success" />
+    </node>
+  
+</launch>
