@@ -25,7 +25,7 @@ class CombinePoseCamError:
     def timer_callback(self, event):
         if self.pose is None or self.cam_error is None:
             return
-        self.controller_error.linear.x = -self.pose.pose.position.x - 1.5
+        self.controller_error.linear.x = -self.pose.pose.position.x - 2.0
         # self.controller_error.linear.x = self.cam_error.linear.z
         self.controller_error.linear.y = -self.pose.pose.position.y
         self.controller_error.linear.z = self.cam_error.linear.z

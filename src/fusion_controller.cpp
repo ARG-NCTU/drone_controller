@@ -75,6 +75,10 @@ void Control :: pubTwist(){
 
     ros::Rate rate(m_rate);
 
+    if (!m_twist[0] && !m_twist[1] && !m_twist[2] && !m_twist[3] && !m_twist[4] && !m_twist[5]){
+        return;
+    }
+    
     geometry_msgs::Twist pub_msg_twist;
     
     pub_msg_twist.linear.x = m_twist[0];
