@@ -86,13 +86,21 @@ class TrackWAMVUWBPose:
             self.drone_pose_to_wamv[0, 3], self.drone_pose_to_wamv[1, 3], self.drone_pose_to_wamv[2, 3]
         )
         yaw = tft.euler_from_matrix(self.drone_pose_to_wamv)[2]
-        print("r: {}, theta: {}, z: {}, yaw: {}".format(r, theta, z, yaw))
+        # print("r: {}, theta: {}, z: {}, yaw: {}".format(r, theta, z, yaw))
         # print(self.track_gps_finish_success.data)
-        if abs(r - 1.0) > 0.5 and abs(theta) > 2.8 and abs(z - 1.0) < 0.5 and abs(yaw) < 0.3:
+        if abs(r - 1.0) < 1.0 and abs(theta) > 2.6 and abs(z - 1.0) < 0.5 and abs(yaw) < 0.3:
             self.track_gps_finish_success.data = True
         else:
             self.track_gps_finish_success.data = False
 
+        if abs(r - 1.0) >= 1.0:
+            rospy.loginfo("r: {}".format(r))
+        if abs(theta) <= 2.6:
+            rospy.loginfo("theta: {}".format(theta))
+        if abs(z - 1.0) >= 0.5:
+            rospy.loginfo("z: {}".format(z))
+        if abs(yaw) >= 0.3:
+            rospy.loginfo("yaw: {}".format(yaw))
         self.track_gps_finish_success_pub.publish(self.track_gps_finish_success)
 
         # Action
