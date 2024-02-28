@@ -25,7 +25,7 @@ class TrackWAMVGPSPose:
             "/wamv/localization_gps_imu/pose", PoseStamped, self.wamv_pose_to_local_callback
         )
         self.drone_pose_to_local_sub = rospy.Subscriber(
-            "mavros/local_position/pose", PoseStamped, self.drone_pose_to_local_callback
+            "/mavros/local_position/pose", PoseStamped, self.drone_pose_to_local_callback
         )
 
         self.setpoint_position_local_pub = rospy.Publisher(
