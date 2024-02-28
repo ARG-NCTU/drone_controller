@@ -25,10 +25,10 @@ class TrackWAMVUWBPose:
         #     "/wamv/localization_gps_imu/pose", PoseStamped, self.wamv_pose_to_local_callback
         # )
         self.drone_pose_to_wamv_sub = rospy.Subscriber(
-            "/pozyx_simulation/drone/pose/optim", PoseStamped, self.drone_pose_to_wamv_callback
+            "/pozyx_simulation/drone/pose/ground_truth", PoseStamped, self.drone_pose_to_wamv_callback
         )
         self.drone_pose_to_local_sub = rospy.Subscriber(
-            "/mavros/local_position/pose", PoseStamped, self.drone_pose_to_local_callback
+            "mavros/local_position/pose", PoseStamped, self.drone_pose_to_local_callback
         )
         self.setpoint_position_local_pub = rospy.Publisher(
             "/mavros/setpoint_position/local", PoseStamped, queue_size=10
@@ -88,18 +88,18 @@ class TrackWAMVUWBPose:
         yaw = tft.euler_from_matrix(self.drone_pose_to_wamv)[2]
         # print("r: {}, theta: {}, z: {}, yaw: {}".format(r, theta, z, yaw))
         # print(self.track_gps_finish_success.data)
-        if abs(r - 1.0) < 1.0 and abs(theta) > 2.6 and abs(z - 1.0) < 0.5 and abs(yaw) < 0.3:
+        if abs(r - 3.0) < 5 and abs(theta) > 2.6 and abs(z - 2.0) < 2.5 and abs(yaw) < 0.45:
             self.track_gps_finish_success.data = True
         else:
             self.track_gps_finish_success.data = False
 
-        if abs(r - 1.0) >= 1.0:
+        if abs(r - 3.0) >= 5:
             rospy.loginfo("r: {}".format(r))
         if abs(theta) <= 2.6:
             rospy.loginfo("theta: {}".format(theta))
-        if abs(z - 1.0) >= 0.5:
+        if abs(z - 2.0) >= 2.5:
             rospy.loginfo("z: {}".format(z))
-        if abs(yaw) >= 0.3:
+        if abs(yaw) >= 0.45:
             rospy.loginfo("yaw: {}".format(yaw))
         self.track_gps_finish_success_pub.publish(self.track_gps_finish_success)
 
@@ -111,8 +111,8 @@ class TrackWAMVUWBPose:
             self.behavior_status_pub.publish(status)
             if not np.allclose(self.drone_pose_to_wamv, np.identity(4)):
                 if not np.allclose(self.drone_pose_to_local, np.identity(4)):
-                    wamv_to_drone[0, 3] += -1.5
-                    wamv_to_drone[2, 3] += 1.0
+                    wamv_to_drone[0, 3] += -3.5
+                    wamv_to_drone[2, 3] += 2.0
                     wamv_to_local = np.dot(self.drone_pose_to_local, wamv_to_drone)
                     wamv_to_local_msg = self.matrix_to_pose_stamped(wamv_to_local, "map")
                     self.setpoint_position_local_pub.publish(wamv_to_local_msg)

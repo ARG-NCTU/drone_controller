@@ -22,10 +22,10 @@ class TrackWAMVGPSPose:
         )
         self.behavior_status_pub = rospy.Publisher("/{}_status".format(node_name), Status, queue_size=1)
         self.wamv_pose_to_local_sub = rospy.Subscriber(
-            "/wamv/localization_gps_imu/pose", PoseStamped, self.wamv_pose_to_local_callback
+            "/wamv2/localization_gps_imu/pose", PoseStamped, self.wamv_pose_to_local_callback
         )
         self.drone_pose_to_local_sub = rospy.Subscriber(
-            "/mavros/local_position/pose", PoseStamped, self.drone_pose_to_local_callback
+            "mavros/local_position/pose", PoseStamped, self.drone_pose_to_local_callback
         )
 
         self.setpoint_position_local_pub = rospy.Publisher(
@@ -66,8 +66,8 @@ class TrackWAMVGPSPose:
         drone_pose_to_wamv = np.dot(np.linalg.inv(self.wamv_pose_to_local), self.drone_pose_to_local)
         drone_pose_to_wamv = self.matrix_to_pose_stamped(drone_pose_to_wamv, "wamv/base_link")
 
-        print("Distance: {}".format(self.calculate_distance((drone_pose_to_wamv.pose.position.x, drone_pose_to_wamv.pose.position.y))))
-        if self.calculate_distance((drone_pose_to_wamv.pose.position.x, drone_pose_to_wamv.pose.position.y)) < 10.0:
+        # print("Distance: {}".format(self.calculate_distance((drone_pose_to_wamv.pose.position.x, drone_pose_to_wamv.pose.position.y))))
+        if self.calculate_distance((drone_pose_to_wamv.pose.position.x, drone_pose_to_wamv.pose.position.y)) < 15.0:
             self.track_gps_finish_success.data = True
         else:
             self.track_gps_finish_success.data = False
