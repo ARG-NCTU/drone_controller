@@ -1,0 +1,6 @@
+<launch>
+	<node name="gz_pose_to_px4" pkg="drone_controller" type="get_truth_pose_to_px4.py">
+		<param name="model_name" value="drone"/>
+		<param name="relative_entity_name" value="world"/>
+	</node>
+</launch>
