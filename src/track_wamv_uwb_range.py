@@ -51,7 +51,7 @@ class TrackWAMVRange:
             )
         self.goal_sub = rospy.Subscriber("/track_wamv_range/goal", PoseStamped, self.cb_goal)
         self.twist_pub = rospy.Publisher("/mavros/setpoint_velocity/cmd_vel_unstamped", Twist, queue_size=1)
-        self.pub_timer = rospy.Timer(rospy.Duration(0.05), self.cb_pub_timer)
+        self.pub_timer = rospy.Timer(rospy.Duration(0.05), self.cb_pub_timer, reset=True)
 
     def cb_active(self, msg):
         self.active = msg.data
